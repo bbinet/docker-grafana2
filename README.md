@@ -20,37 +20,19 @@ You can now push the new image to the public registry:
 Configure and run
 -----------------
 
-You can configure the Grafana running container with the following required
-environment variables:
+You can configure the Grafana container with the environment variables of the
+form `GF_<SECTION>_<KEY>` with sections and keys that are available in grafana
+default configuration:
+https://github.com/grafana/grafana/blob/develop/conf/defaults.ini
 
-
-- `METRICSDB`: InfluxDB database in which grafana should query the metrics.
-- `METRICSDB_USER`: Username to use to connect to the above database (the
-  password will be read from InfluxDB docker environment variables).
-- `GRAFANADB`: InfluxDB database in which grafana should persist all the
-  dashboards.
-- `GRAFANADB_USER`: Username to use to connect to the above database (the
-  password will be read from InfluxDB docker environment variables).
-- `HTTP_USER`: Username for HTTP auth.
-- `HTTP_PASSWORD`: Password for HTTP auth.
-
-Then when starting your InfluxDB container, you will want to bind ports `80`
-from the Grafana container to the host external ports.
-The container should also be linked with the InfluxDB container so that it can
-read the users passwords from the environment variables.
+Then when starting your Grafana container, you will want to bind port `3000`
+to the host external port.
 
 For example:
 
     $ docker pull bbinet/grafana
 
     $ docker run --name grafana \
-          --link influxdb:influxdb \
-          -p 80:80 \
-          -e METRICSDB=metrics \
-          -e METRICSDB_USER=user \
-          -e GRAFANADB=grafana \
-          -e GRAFANADB_USER=admin \
-          -e HTTP_USER=myuser \
-          -e HTTP_PASSWORD=mypass \
+          -p 80:3000 \
           bbinet/grafana
 
