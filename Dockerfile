@@ -1,33 +1,19 @@
 FROM debian:wheezy
+
 MAINTAINER Bruno Binet <bruno.binet@gmail.com>
 
-ENV GRAFANA_VERSION 1.9.0-rc1
+ENV DEBIAN_FRONTEND noninteractive
+#ENV GRAFANA_VERSION 2.0.0
 
 RUN apt-get update && \
-    apt-get install -y nginx-light wget apache2-utils && \
-    wget http://grafanarel.s3.amazonaws.com/grafana-${GRAFANA_VERSION}.tar.gz -O grafana.tar.gz && \
-    tar zxf grafana.tar.gz && \
-    rm grafana.tar.gz && \
-    mv grafana-${GRAFANA_VERSION} /data && \
-    apt-get purge -y wget && \
+    apt-get install -yq libfontconfig && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ADD config.template.js /config.template.js
-ADD nginx.config /etc/nginx/sites-enabled/default
+#ADD https://grafanarel.s3.amazonaws.com/builds/grafana_${GRAFANA_VERSION}_amd64.deb /tmp/grafana.deb
+ADD https://github.com/bbinet/grafana/releases/download/v2.0.0-prebeta2-f3d4d27/grafana_2.0.0-prebeta2_amd64.deb /tmp/grafana.deb
+RUN dpkg -i /tmp/grafana.deb
 
-ADD run.sh /run.sh
-RUN chmod +x /run.sh
+EXPOSE 3000
 
-# Environment variables for configuring InfluxDB datasources
-#ENV METRICSDB metrics
-#ENV METRICSDB_USER user
-#ENV GRAFANADB grafana
-#ENV GRAFANADB_USER admin
-# Environment variables for HTTP AUTH
-#ENV HTTP_USER grafana
-#ENV HTTP_PASSWORD mypass
-
-EXPOSE 80
-
-CMD ["/run.sh"]
+CMD ["/opt/grafana/current/grafana", "--config", "/etc/grafana/grafana.ini", "web"]
