@@ -16,4 +16,6 @@ RUN dpkg -i /tmp/grafana.deb
 
 EXPOSE 3000
 
+WORKDIR /opt/grafana/current
+
 CMD ["/opt/grafana/current/grafana", "--config", "/etc/grafana/grafana.ini", "web"]
