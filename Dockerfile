@@ -3,7 +3,7 @@ FROM debian:wheezy
 MAINTAINER Bruno Binet <bruno.binet@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV GRAFANA_VERSION 2.0.0-beta1
+ENV GRAFANA_VERSION 2.0.0-beta2
 
 RUN apt-get update && \
     apt-get install -yq libfontconfig && \
